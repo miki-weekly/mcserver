@@ -1,0 +1,26 @@
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    environment:
+      EULA: "TRUE"
+      MODPACK_PLATFORM: "AUTO_CURSEFORGE"
+      CF_SLUG: "all-the-mods-10"
+      CURSEFORGE_API_KEY: "${CURSEFORGE_KEY}"
+      MEMORY: "12G"
+    ports:
+      - "127.0.0.1:25565:25565"
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+
+  playit:
+    image: ghcr.io/playit-cloud/playit-agent:latest
+    network_mode: "service:minecraft"
+    volumes:
+      - playit_data:/data
+    environment:
+    - SECRET_KEY=${PLAYIT_KEY}
+    restart: unless-stopped
+
+volumes:
+  playit_data:
